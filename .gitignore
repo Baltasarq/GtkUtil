@@ -1,0 +1,16 @@
+bin/
+obj/
+
+# Config
+*.userprefs
+
+# Backup
+*.bak
+*~
+
+# Binaries
+*.exe
+*.obj
+*.dll
+*.out
+*.app
