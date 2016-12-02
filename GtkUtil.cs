@@ -10,7 +10,6 @@
 
 using System;
 using System.IO;
-using Gtk;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -89,8 +88,8 @@ namespace GtkUtil {
 		/// <returns>
 		/// A <see cref="System.Boolean"/> referring whether a file was chosen or not.
 		/// </returns>
-		static public bool DlgOpen(string backend, string title, Window main, ref string fileName, string filter) {
-			return DlgSelectFile( backend, title, main, FileChooserAction.Open, ref fileName, filter );
+		static public bool DlgOpen(string backend, string title, Gtk.Window main, ref string fileName, string filter) {
+			return DlgSelectFile( backend, title, main, Gtk.FileChooserAction.Open, ref fileName, filter );
 		}
 
 		/// <summary>
@@ -114,8 +113,8 @@ namespace GtkUtil {
 		/// <returns>
 		/// A <see cref="System.Boolean"/> referring whether a file was chosen or not.
 		/// </returns>
-		static public bool DlgSave(string backend, string title, Window main, ref string fileName, string filter) {
-			return DlgSelectFile( backend, title, main, FileChooserAction.Save, ref fileName, filter );
+		static public bool DlgSave(string backend, string title, Gtk.Window main, ref string fileName, string filter) {
+			return DlgSelectFile( backend, title, main, Gtk.FileChooserAction.Save, ref fileName, filter );
 		}
 
 		/// <summary>
@@ -139,8 +138,8 @@ namespace GtkUtil {
 		/// <returns>
 		/// A <see cref="System.Boolean"/> referring whether a file was chosen or not.
 		/// </returns>
-		static public bool DlgSaveFolder(string backend, string title, Window main, ref string fileName, string filter) {
-			return DlgSelectFile( backend, title, main, FileChooserAction.CreateFolder, ref fileName, filter );
+		static public bool DlgSaveFolder(string backend, string title, Gtk.Window main, ref string fileName, string filter) {
+			return DlgSelectFile( backend, title, main, Gtk.FileChooserAction.CreateFolder, ref fileName, filter );
 		}
 
 		/// <summary>
@@ -164,19 +163,19 @@ namespace GtkUtil {
 		/// <returns>
 		/// A <see cref="System.Boolean"/> referring whether a file was chosen or not.
 		/// </returns>
-		static public bool DlgSelectFolder(string backend, string title, Window main, ref string fileName, string filter) {
-			return DlgSelectFile( backend, title, main, FileChooserAction.SelectFolder, ref fileName, filter );
+		static public bool DlgSelectFolder(string backend, string title, Gtk.Window main, ref string fileName, string filter) {
+			return DlgSelectFile( backend, title, main, Gtk.FileChooserAction.SelectFolder, ref fileName, filter );
 		}
 
-		static private bool DlgSelectFile(string back, string title, Window main, FileChooserAction action, ref string fileName, string filter)
+		static private bool DlgSelectFile(string back, string title, Gtk.Window main, Gtk.FileChooserAction action, ref string fileName, string filter)
 		{
-			var dlg = new FileChooserDialog(
+			var dlg = new Gtk.FileChooserDialog(
 			          			back, title, main, action,
-			                                "Cancel", ResponseType.Cancel,
-                                      		"Ok", ResponseType.Ok
+			                                "Cancel", Gtk.ResponseType.Cancel,
+                                      		"Ok", Gtk.ResponseType.Ok
 			);
 
-			var fileFilter = new  FileFilter();
+			var fileFilter = new  Gtk.FileFilter();
 
 			try {
 				fileFilter.Name = filter.Substring ( filter.IndexOf( "." ) + 1 ) + " files";
@@ -187,11 +186,11 @@ namespace GtkUtil {
 			fileFilter.AddPattern( filter );
 			dlg.AddFilter( fileFilter );
 			dlg.SetFilename( fileName );
-			ResponseType result = (ResponseType) dlg.Run();
+			Gtk.ResponseType result = (Gtk.ResponseType) dlg.Run();
 
 			fileName = dlg.Filename;
 			dlg.Destroy();
-			return ( result == ResponseType.Ok );
+			return ( result == Gtk.ResponseType.Ok );
 		}
 
 		/// <summary>
@@ -206,7 +205,7 @@ namespace GtkUtil {
 		/// <param name="msg">
 		/// A <see cref="System.String"/> containing the message.
 		/// </param>
-		static public void MsgError(Window main, string title, string msg) {
+		static public void MsgError(Gtk.Window main, string title, string msg) {
 			ShowMsg( main, title, msg, Gtk.MessageType.Error );
 		}
 
@@ -222,7 +221,7 @@ namespace GtkUtil {
 		/// <param name="msg">
 		/// A <see cref="System.String"/> containing the message.
 		/// </param>
-		static public void MsgInfo(Window main, string title, string msg) {
+		static public void MsgInfo(Gtk.Window main, string title, string msg) {
 			ShowMsg( main, title, msg, Gtk.MessageType.Info );
 		}
 
@@ -241,9 +240,9 @@ namespace GtkUtil {
 		/// <returns>
 		/// A <see cref="System.Boolean"/> containing true if the user chose yes, false otherwise
 		/// </returns>
-		static public bool Ask(Window main, string title, string msg)
+		static public bool Ask(Gtk.Window main, string title, string msg)
 		{
-			var dlg = new MessageDialog(
+			var dlg = new Gtk.MessageDialog(
 			              		main,
 			                    Gtk.DialogFlags.Modal,
 								Gtk.MessageType.Question,
@@ -254,16 +253,16 @@ namespace GtkUtil {
 			dlg.Text = msg;
 			dlg.Title = title + " Question";
 
-			ResponseType res = (ResponseType) dlg.Run();
+			Gtk.ResponseType res = (Gtk.ResponseType) dlg.Run();
 			dlg.Destroy();
 
-			return ( res == ResponseType.Yes );
+			return ( res == Gtk.ResponseType.Yes );
 		}
 
 
-		static private void ShowMsg(Window main, string title, string txt, Gtk.MessageType type)
+		static private void ShowMsg(Gtk.Window main, string title, string txt, Gtk.MessageType type)
 		{
-			var dlg = new MessageDialog(
+			var dlg = new Gtk.MessageDialog(
 			              		main,
 			                    Gtk.DialogFlags.Modal,
 								type,
@@ -274,7 +273,7 @@ namespace GtkUtil {
 			dlg.Text = txt;
 			dlg.Title = title;
 
-			if ( type == MessageType.Error )
+			if ( type == Gtk.MessageType.Error )
 					dlg.Title += " Error";
 			else	dlg.Title += " Information";
 
@@ -325,7 +324,7 @@ namespace GtkUtil {
 					
 					line = file.ReadLine();
 					while( !file.EndOfStream ) {
-						if ( line.ToLower().StartsWith( EtqLastFile ) ) {
+					if ( line.ToLower().StartsWith( EtqLastFile, StringComparison.InvariantCulture ) ) {
 							int pos = line.IndexOf( '=' );
 							
 							if ( pos > 0 ) {
@@ -333,7 +332,7 @@ namespace GtkUtil {
 							}
 						}
 						else
-						if ( line.ToLower().StartsWith( EtqWidth ) ) {
+						if ( line.ToLower().StartsWith( EtqWidth, StringComparison.InvariantCulture ) ) {
 							int pos = line.IndexOf( '=' );
 	
 							if ( pos > 0 ) {
@@ -341,7 +340,7 @@ namespace GtkUtil {
 							}
 						}
 						else
-						if ( line.ToLower().StartsWith( EtqHeight ) ) {
+						if ( line.ToLower().StartsWith( EtqHeight, StringComparison.InvariantCulture ) ) {
 							int pos = line.IndexOf( '=' );
 	
 							if ( pos > 0 ) {
@@ -349,7 +348,7 @@ namespace GtkUtil {
 							}
 						}
 						else
-						if ( line.ToLower().StartsWith( EtqRecent ) ) {
+						if ( line.ToLower().StartsWith( EtqRecent, StringComparison.InvariantCulture ) ) {
 							int pos = line.IndexOf( '=' );
 	
 							if ( pos > 0 ) {
