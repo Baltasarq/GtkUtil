@@ -14,8 +14,7 @@ namespace GtkUtil;
 /// The TableView class offers a simplification of TreeView for
 /// tables of text elements
 /// </summary>
-public class TableTextView
-{
+public class TableTextView {
 	/// <summary>
 	/// Delegate used to signal to a method that the table has changed.
 	/// </summary>
@@ -24,7 +23,7 @@ public class TableTextView
 	/// <summary>
 	/// Set this attribute to the method you want to have called when a cell changes.
 	/// </summary>
-	public TableChangedDelegate TableChanged = (a1, a2, a3) => {};
+	public TableChangedDelegate TableChanged = (row, col, value) => {};
 
     /// <summary>
     /// It acts as a wrapper for average TreeView's
