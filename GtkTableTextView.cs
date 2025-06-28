@@ -35,9 +35,11 @@ public class TableTextView {
     /// A <see cref="int"/> holding the number of columns.
     /// </param>
     public TableTextView(Gtk.TreeView tv, int numCols)
-		:this(tv, numCols,
-				(bool[])  Enumerable.Repeat( false, 1 )
-							.Concat( Enumerable.Repeat( true, numCols ) )  )
+		:this(	tv,
+			  	numCols,
+				Enumerable.Repeat( false, 1 )
+							.Concat( Enumerable.Repeat( true, numCols ) )
+							.ToArray() )
 	{
 	}
 
@@ -54,10 +56,11 @@ public class TableTextView {
 	/// A <see cref="System.Int32"/> holding the number of beginning columns that are not editable.
 	/// </param>
 	public TableTextView(Gtk.TreeView tv, int numCols, int numFirstColsNotEditable)
-		: this( tv, numCols,
-				(bool[])Enumerable.Repeat(
-									false, numFirstColsNotEditable )
-							.Concat( Enumerable.Repeat( true, numCols ) ) )
+		: this( tv,
+				numCols,
+				Enumerable.Repeat( false, numFirstColsNotEditable )
+							.Concat( Enumerable.Repeat( true, numCols ) )
+							.ToArray() )
 	{
 	}
 
@@ -76,18 +79,20 @@ public class TableTextView {
 	public TableTextView(Gtk.TreeView tv, int numCols, bool[] mutability)
 	{
 		// Chk
-		if ( this.NumCols < 1 ) {
+		if ( numCols < 1 ) {
 			throw new ArgumentException( "number of cols must be > 0" );
 		}
 
-		if ( mutability.Length > numCols) {
-			throw new ArgumentException( nameof(numCols)
-					+ " < length of " + nameof( mutability ) );
+		if ( mutability.Length <= numCols) {
+			throw new ArgumentException(
+					nameof( numCols )
+					+ " < length of "
+					+ nameof( mutability ) );
 		}
 
 		this.NumCols = numCols;
 		this.tvTable = tv;
-		this.headers = new string[ this.NumCols ];
+		this.headers = new string[ numCols ];
 
 		// Create
 		this.tvTable.Model = this.NewModel();
