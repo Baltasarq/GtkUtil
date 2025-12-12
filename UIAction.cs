@@ -31,6 +31,9 @@ public class UIAction {
         get;
     }
 
+    /// <summary>The "clean" label for that action, like "Save".</summary>
+    public string LabelNoMnemonics => this.Label.Replace( "_", "" );
+
     /// <summary>
     /// The tooltip or explanation of the action, as in "Stores your work.".
     /// </summary>
@@ -117,8 +120,25 @@ public class UIAction {
     /// <returns>A <see cref="Gtk.ToolButton"/>.</returns>
     public Gtk.ToolButton CreateToolButton()
     {
-        string label = this.Label.Replace( "_", "" );
+        string label = this.LabelNoMnemonics;
         var toret = new Gtk.ToolButton( new Gtk.Image( this.Icon ), label );
+
+        toret.Clicked += this.Activated;
+        this.NewWidget( toret );
+        return toret;
+    }
+
+    /// <summary>
+    /// Creates a <see cref="Gtk.Button"/>, related to this action.
+    /// </summary>
+    /// <returns>A <see cref="Gtk.Button"/>.</returns>
+    public Gtk.Button CreateButton()
+    {
+        var toret = new Gtk.Button();
+
+        if ( this.icon is not null ) {
+            toret.Image = new Gtk.Image( this.Icon, Gtk.IconSize.Button );
+        }
 
         toret.Clicked += this.Activated;
         this.NewWidget( toret );
@@ -158,6 +178,10 @@ public class UIAction {
         foreach(Gtk.Widget w in this.widgets) {
             if ( w is Gtk.ToolButton tb ) {
                 tb.IconWidget = new Gtk.Image( this.Icon );
+            }
+            else
+            if ( w is Gtk.Button b ) {
+                b.Image = new Gtk.Image( this.Icon, Gtk.IconSize.Button );
             }
         }
     }
